@@ -62,6 +62,7 @@ License:        ((MIT OR Apache-2.0) AND Unicode-3.0) AND 0BSD AND (0BSD OR MIT 
 %description -n %{crate} %{_description}
 
 %files       -n %{crate}
+%license COPYING
 %license LICENSE.dependencies
 %license cargo-vendor.txt
 %doc ChangeLog.md
@@ -122,6 +123,7 @@ License:        ((MIT OR Apache-2.0) AND Unicode-3.0) AND 0BSD AND (0BSD OR MIT 
 %cargo_prep -v vendor
 
 %build
+%license COPYING
 %cargo_build -f oci
 %{cargo_license_summary -f oci}
 %{cargo_license -f oci} > LICENSE.dependencies
