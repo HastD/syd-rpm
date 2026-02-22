@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# SPDX-FileCopyrightText: 2026 Daniel Hast
+#
+# SPDX-License-Identifier: MIT
+
 set -euo pipefail
 
 version=$(cargo info -q syd | grep -oP '^version: \K[0-9]+(?:\.[0-9]+)?(?:\.[0-9]+)?$')
