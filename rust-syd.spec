@@ -17,8 +17,9 @@ Summary:        Rock-solid application kernel
 
 License:        GPL-3.0-only
 URL:            https://crates.io/crates/syd
-Source:         %{crates_source}
-Source:         syd-%{version}-vendor.tar.xz
+Source0:        %{crates_source}
+Source1:        syd-%{version}-vendor.tar.xz
+Source2:        COPYING
 
 BuildRequires:  cargo-rpm-macros >= 26
 BuildRequires:  libseccomp-devel
@@ -121,9 +122,9 @@ License:        ((MIT OR Apache-2.0) AND Unicode-3.0) AND 0BSD AND (0BSD OR MIT 
 %prep
 %autosetup -n %{crate}-%{version} -p1 -a1
 %cargo_prep -v vendor
+cp %{SOURCE2} .
 
 %build
-%license COPYING
 %cargo_build -f oci
 %{cargo_license_summary -f oci}
 %{cargo_license -f oci} > LICENSE.dependencies
