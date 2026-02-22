@@ -1,0 +1,471 @@
+[package]
+name = "syd"
+version = "3.49.1"
+edition = "2021"
+authors = ["Ali Polatel <alip@chesswob.org>"]
+description = "rock-solid application kernel"
+readme = "README.md"
+license = "GPL-3.0-only"
+categories = ["command-line-utilities", "os::linux-apis", "security"]
+keywords = ["container", "linux", "security", "sandbox"]
+homepage = "https://man.exherbo.org"
+repository = "https://gitlab.exherbo.org/sydbox/sydbox.git"
+rust-version = "1.83"
+include = ["**/*.rs", "*.md", "src/*.el", "src/*.sh", "man/*.scd", "vim/*/*.vim", "Cargo.toml", "Cargo.lock"]
+
+[features]
+default = ["asm", "log", "sh", "utils"]
+# Build syd-asm(1) the instruction decoder.
+asm = ["iced-x86", "raki", "yaxpeax-arch", "yaxpeax-arm"]
+# Enable the virtual syslog(2) interface.
+# You need this to read access violations using dmesg(1) inside Syd.
+log = ["ringbuf"]
+# Enable syd-sh(1), simple confined shell based on wordexp(3).
+# Uses linefeed to provide readline-like interface.
+sh = ["linefeed"]
+# Build OCI runtime helper "syd-oci"
+oci = ["clap", "libcgroups", "libcontainer", "liboci-cli", "oci-spec", "procfs", "tabwriter", "tracing", "tracing-subscriber"]
+# Enables io-uring based integration tests.
+# This is not used by the main Syd binary.
+uring = ["io-uring"]
+# Build helper utilities.
+# No reason to disable this unless you want fast build cycles.
+utils = []
+# Enable profiling.
+# Requires gperftools installed.
+prof = ["gperftools", "tcmalloc"]
+
+[profile.release]
+debug = true
+lto = "thin"
+panic = "unwind"
+
+[profile.dev]
+panic = "unwind"
+
+###
+# Main programs
+###
+[[bin]]
+name = "syd"
+path = "src/syd.rs"
+
+[[bin]]
+name = "syd-aux"
+path = "src/utils/syd-aux.rs"
+
+[[bin]]
+name = "syd-bit"
+path = "src/utils/syd-bit.rs"
+
+[[bin]]
+name = "syd-cap"
+path = "src/utils/syd-cap.rs"
+
+[[bin]]
+name = "syd-cpu"
+path = "src/utils/syd-cpu.rs"
+
+[[bin]]
+name = "syd-dns"
+path = "src/utils/syd-dns.rs"
+
+[[bin]]
+name = "syd-env"
+path = "src/utils/syd-env.rs"
+
+[[bin]]
+name = "syd-exec"
+path = "src/utils/syd-exec.rs"
+
+[[bin]]
+name = "syd-hex"
+path = "src/utils/syd-hex.rs"
+
+[[bin]]
+name = "syd-info"
+path = "src/utils/syd-info.rs"
+
+[[bin]]
+name = "syd-key"
+path = "src/utils/syd-key.rs"
+
+[[bin]]
+name = "syd-lock"
+path = "src/utils/syd-lock.rs"
+
+[[bin]]
+name = "syd-mdwe"
+path = "src/utils/syd-mdwe.rs"
+
+[[bin]]
+name = "syd-ofd"
+path = "src/utils/syd-ofd.rs"
+
+[[bin]]
+name = "syd-pause"
+path = "src/utils/syd-pause.rs"
+
+[[bin]]
+name = "syd-pds"
+path = "src/utils/syd-pds.rs"
+
+[[bin]]
+name = "syd-sec"
+path = "src/utils/syd-sec.rs"
+
+[[bin]]
+name = "syd-size"
+path = "src/utils/syd-size.rs"
+
+[[bin]]
+name = "syd-aes"
+path = "src/utils/syd-aes.rs"
+
+[[bin]]
+name = "syd-elf"
+path = "src/utils/syd-elf.rs"
+
+[[bin]]
+name = "syd-pty"
+path = "src/utils/syd-pty.rs"
+
+[[bin]]
+name = "syd-tor"
+path = "src/utils/syd-tor.rs"
+
+[[bin]]
+name = "syd-tsc"
+path = "src/utils/syd-tsc.rs"
+
+[[bin]]
+name = "syd-uts"
+path = "src/utils/syd-uts.rs"
+
+[[bin]]
+name = "syd-oci"
+path = "src/utils/syd-oci.rs"
+required-features = ["oci"]
+
+[[bin]]
+name = "syd-test"
+path = "src/t/main.rs"
+
+[[bin]]
+name = "syd-test-do"
+path = "src/t/do.rs"
+
+[[bin]]
+name = "syd-x"
+path = "src/utils/syd-x.rs"
+####
+
+# Utilities with extra dependencies
+[[bin]]
+name = "syd-asm"
+path = "src/utils/syd-asm.rs"
+required-features = ["asm"]
+
+[[bin]]
+name = "syd-sh"
+path = "src/utils/syd-sh.rs"
+required-features = ["sh"]
+
+# Basic utilities with no extra dependencies
+[[bin]]
+name = "syd-emacs"
+path = "src/utils/syd-emacs.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-fd"
+path = "src/utils/syd-fd.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-ls"
+path = "src/utils/syd-ls.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-cat"
+path = "src/utils/syd-cat.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-mem"
+path = "src/utils/syd-mem.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-net"
+path = "src/utils/syd-net.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-poc"
+path = "src/utils/syd-poc.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-read"
+path = "src/utils/syd-read.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-stat"
+path = "src/utils/syd-stat.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-sys"
+path = "src/utils/syd-sys.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-ldd"
+path = "src/utils/syd-ldd.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-rnd"
+path = "src/utils/syd-rnd.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-run"
+path = "src/utils/syd-run.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-tty"
+path = "src/utils/syd-tty.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-fork"
+path = "src/utils/syd-fork.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-fs"
+path = "src/utils/syd-fs.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-sha"
+path = "src/utils/syd-sha.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-path"
+path = "src/utils/syd-path.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-tck"
+path = "src/utils/syd-tck.rs"
+required-features = ["utils"]
+
+[[bin]]
+name = "syd-utc"
+path = "src/utils/syd-utc.rs"
+required-features = ["utils"]
+
+[[test]]
+name = "tests"
+
+#
+# Benchmarks
+#
+
+[[bench]]
+name = "sandbox_from_str"
+path = "bench/sandbox/from_str.rs"
+harness = false
+
+[[bench]]
+name = "sandbox_parse_elf"
+path = "bench/sandbox/parse_elf.rs"
+harness = false
+
+[[bench]]
+name = "sandbox_wildmatch"
+path = "bench/sandbox/wildmatch.rs"
+harness = false
+
+[[bench]]
+name = "sys-exec"
+path = "bench/sys/exec.rs"
+harness = false
+
+[[bench]]
+name = "sys-getdents"
+path = "bench/sys/getdents.rs"
+harness = false
+
+[[bench]]
+name = "sys-getpid"
+path = "bench/sys/getpid.rs"
+harness = false
+
+[[bench]]
+name = "sys-gettid"
+path = "bench/sys/gettid.rs"
+harness = false
+
+[[bench]]
+name = "sys-fork"
+path = "bench/sys/fork.rs"
+harness = false
+
+[[bench]]
+name = "sys-kill"
+path = "bench/sys/kill.rs"
+harness = false
+
+[[bench]]
+name = "sys-mmap"
+path = "bench/sys/mmap.rs"
+harness = false
+
+[[bench]]
+name = "sys-open"
+path = "bench/sys/open.rs"
+harness = false
+
+[[bench]]
+name = "sys-open-read-close"
+path = "bench/sys/open_read_close.rs"
+harness = false
+
+[[bench]]
+name = "sys-stat"
+path = "bench/sys/stat.rs"
+harness = false
+
+[[bench]]
+name = "sys-unlink"
+path = "bench/sys/unlink.rs"
+harness = false
+
+[[bench]]
+name = "canon"
+path = "bench/canon.rs"
+harness = false
+
+# Old criterion bencmarks.
+# TODO: Rewrite with brunch.
+#[[bench]]
+#name = "path_unsafe"
+#harness = false
+#
+#[[bench]]
+#name = "proc_fd"
+#harness = false
+#
+#[[bench]]
+#name = "sandbox_forcemap"
+#harness = false
+#
+#[[bench]]
+#name = "sandbox_globset"
+#harness = false
+
+[dependencies]
+ahash = { version = "0.8", features = [ "no-rng" ] }
+bitflags = { version = "2.10", default-features = false }
+btoi = { version = "0.5", default-features = false, features = ["std"] }
+crc = { version = "3.4", default-features = false }
+data-encoding = { version = "2.10", default-features = false, features = ["std"] }
+dur = { version = "0.5", default-features = false }
+expiringmap = { version = "0.1", default-features = false }
+fixedbitset = { version = "0.5", default-features = false }
+indexmap = { version = "2.13", default-features = false, features = ["std"] }
+ipnet = { version = "2.11", default-features = false, features = ["std"] }
+iprange = { version = "0.6", default-features = false }
+itoa = { version = "1.0", default-features = false }
+lexopt = { version = "0.3", default-features = false }
+# Update after this is fixed: https://github.com/rust-lang/libc/issues/4939
+libc = { version = "=0.2.178", default-features = false }
+libloading = { version = "0.8", default-features = false }
+libseccomp = { version = "0.4", default-features = false }
+libseccomp-sys = "0.3"
+md5 = { version = "0.8", default-features = false, features = ["std"] }
+memchr = { version = "2.8", default-features = false, features = ["std"] }
+netlink-sys = { version = "0.8", default-features = false }
+# Update after libc bug is fixed.
+nix = { version = "=0.30", default-features = false, features = ["dir", "env", "event", "fanotify", "fs", "hostname", "inotify", "mount", "mman", "net", "personality", "poll", "ptrace", "resource", "sched", "signal", "socket", "term", "time", "uio", "user", "zerocopy"] }
+nom = { version = "8.0", default-features = false, features = ["alloc", "std"] }
+num_cpus = { version = "1.17", default-features = false }
+parse-size = { version = "1.1", default-features = false }
+# procfs is for syd-oci only.
+# Core syd code uses procfs-core only.
+procfs = { version = "0.18", default-features = false, optional = true }
+procfs-core = { version = "0.18", default-features = false }
+retry = { version = "2.2", default-features = false }
+ringbuf = { version = "0.4", default-features = false, features = ["portable-atomic", "std"], optional = true }
+scapegoat = { version = "2.3", default-features = false }
+shellexpand = { version = "3.1", default-features = false, features = ["base-0", "tilde"] }
+shell-words = { version = "1.1", default-features = false, features = ["std"] }
+serde = { package = "serde_core", version = "1.0", default-features = false, features = ["std"] }
+serde_json = { version = "1.0", default-features = false, features = ["preserve_order", "std"] }
+sha1 = { version = "0.10", default-features = false, features = ["std"] }
+sha3 = { version = "0.10", default-features = false, features = ["std"] }
+# =0.7 breaks 32-bit compilation: https://builds.sr.ht/~alip/job/1401070
+io-uring = { version = "=0.6", default-features = false, optional = true }
+subtle = { version = "2.6", default-features = false, features = ["std"] }
+lexis = { version = "0.2", default-features = false }
+tinyvec = { version = "1.10", default-features = false, features = ["alloc", "serde", "std", "rustc_1_55", "rustc_1_57"] }
+zeroize = { version = "1.8", default-features = false, features = ["simd", "std"] }
+
+# instruction decoders (thx wikky!)
+iced-x86 = { version = "1.21", default-features = false, features = ["decoder", "fast_fmt", "intel", "std"], optional = true }
+raki = { version = "1.3", default-features = false, optional = true }
+yaxpeax-arch = { version = "0.3", default-features = false, features = ["std"], optional = true }
+yaxpeax-arm = { version = "0.4", default-features = false, features = ["std"], optional = true }
+
+# syd-key deps.
+rpassword = { version = "7.4", default-features = false }
+
+# syd-sh deps.
+linefeed = { version = "0.6.0", default-features = false, optional = true }
+
+# profiling deps.
+gperftools = { version = "0.2", default-features = false, features = ["heap"], optional = true }
+tcmalloc = { version = "0.3", default-features = false, optional = true }
+
+# syd-oci deps.
+clap = { version = "4.5", optional = true }
+libcgroups = { version = "0.5", optional = true }
+libcontainer = { version = "0.5", optional = true }
+liboci-cli = { version = "0.5", optional = true }
+oci-spec = { version = "0.8", default-features = false, features = ["runtime"], optional = true }
+tabwriter = { version = "1.4", optional = true }
+tracing = { version = "0.1", features = ["attributes"], optional = true }
+tracing-subscriber = { version = "0.3", optional = true }
+
+# Default allocator:
+# GrapheneOS does not support 32-bit.
+# GrapheneOS does not cross compile to android.
+# GrapheneOS does not cross compile to riscv64, see cfarm9{4,5}.
+[target.'cfg(all(target_pointer_width = "64", not(target_os = "android"), not(target_arch = "riscv64")) )'.dependencies]
+hardened-malloc = { version = "13.0.0", default-features = false, features = ["tiny"] }
+
+[target.'cfg(any(target_arch = "aarch64", target_arch = "x86_64"))'.dependencies]
+tick_counter = { version = "0.4", default-features = false }
+
+[build-dependencies]
+pkg-config = "0.3"
+libc = "0.2"
+
+[dev-dependencies]
+brunch = { version = "0.8", default-features = false }
+goblin = { version = "0.10", default-features = false, features = ["std", "elf32", "elf64", "endian_fd"] }
+strum = { version = "0.27", default-features = false }
+strum_macros = { version = "0.27", default-features = false }
+tempfile = { version = "3.25", default-features = false }
+xz2 = "0.1"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(coverage)', 'cfg(libseccomp_v2_6)', 'cfg(target_page_size_4k)'] }
