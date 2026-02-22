@@ -91,6 +91,7 @@ License:        ((MIT OR Apache-2.0) AND Unicode-3.0) AND 0BSD AND (0BSD OR MIT 
 %{_bindir}/syd-mdwe
 %{_bindir}/syd-mem
 %{_bindir}/syd-net
+%{_bindir}/syd-oci
 %{_bindir}/syd-ofd
 %{_bindir}/syd-path
 %{_bindir}/syd-pause
