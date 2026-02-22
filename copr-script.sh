@@ -2,7 +2,7 @@
 
 # SPDX-FileCopyrightText: 2026 Daniel Hast
 #
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-3.0-only
 
 git clone --depth=1 https://github.com/HastD/syd-rpm.git
 cd syd-rpm

@@ -2,7 +2,7 @@
 
 # SPDX-FileCopyrightText: 2026 Daniel Hast
 #
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-3.0-only
 
 set -euo pipefail
 
