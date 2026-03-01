@@ -4,12 +4,18 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
-git clone --depth=1 https://github.com/HastD/syd-rpm.git
+git clone --depth 1 https://github.com/HastD/syd-rpm.git
 cd syd-rpm
-cargo vendor --versioned-dirs --locked vendor/
-version=$(grep -oP '^Version:\s*\K\S+' rust-syd.spec)
-tar -cJf "../syd-${version}-vendor.tar.xz" vendor/
-mv rust-syd.spec ..
-mv LICENSES/GPL-3.0-only.txt ../COPYING
+cp syd.spec ..
+version=$(grep -oP '^Version:\s*\K\S+' syd.spec)
+tar -cJf "../syd-selinux-${version}.tar.xz" selinux
 cd ..
-rm -rf syd-rpm
+
+git clone --depth 1 --branch "v${version}" https://gitlab.exherbo.org/sydbox/sydbox.git "syd-${version}"
+tar -cJf "syd-${version}.tar.xz" "syd-${version}"
+cd "syd-${version}"
+cargo vendor --versioned-dirs --locked vendor
+tar -cJf "../syd-${version}-vendor.tar.xz" vendor
+cd ..
+
+rm -rf syd-rpm "syd-${version}"

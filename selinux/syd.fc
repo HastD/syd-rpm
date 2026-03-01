@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Daniel Hast
+#
+# SPDX-License-Identifier: GPL-3.0-only
+
+/usr/bin/syd		--	gen_context(system_u:object_r:syd_exec_t,s0)
+/usr/bin/syd-oci	--	gen_context(system_u:object_r:syd_oci_exec_t,s0)

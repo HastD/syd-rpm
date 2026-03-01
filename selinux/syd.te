@@ -1,0 +1,51 @@
+# SPDX-FileCopyrightText: 2026 Daniel Hast
+#
+# SPDX-License-Identifier: GPL-3.0-only
+
+policy_module(syd, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+attribute syd_domain;
+
+type syd_t, syd_domain;
+type syd_exec_t;
+application_domain(syd_t, syd_exec_t)
+
+type syd_oci_exec_t;
+application_executable_file(syd_oci_exec_t)
+
+optional_policy(`
+	container_runtime_domain_template(syd_oci)
+	typeattribute syd_oci_t syd_domain;
+	application_domain(syd_oci_t, syd_oci_exec_t)
+')
+
+########################################
+#
+# syd local policy
+#
+
+# This intentionally does not depend on the deny_ptrace boolean, as it is
+# intended to make syd usable even if ptrace is otherwise denied system-wide.
+allow syd_domain self:process ptrace;
+
+unconfined_domain(syd_t)
+
+optional_policy(`
+	gen_require(`
+		type syd_oci_t;
+	')
+	unconfined_domain(syd_oci_t)
+')
+
+optional_policy(`
+	gen_require(`
+		role unconfined_r;
+		type unconfined_t;
+	')
+	syd_run(unconfined_r, unconfined_t)
+')

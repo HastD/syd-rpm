@@ -1,0 +1,108 @@
+# SPDX-FileCopyrightText: 2026 Daniel Hast
+#
+# SPDX-License-Identifier: GPL-3.0-only
+
+## <summary>policy for syd</summary>
+
+########################################
+## <summary>
+##	Allow role to run syd from given domain.
+## </summary>
+## <param name="role">
+## <summary>
+##	Role allowed to run syd.
+## </summary>
+## </param>
+## <param name="domain">
+## <summary>
+##	Domain allowed to run syd.
+## </summary>
+## </param>
+#
+interface(`syd_run',`
+	gen_require(`
+		attribute syd_domain;
+	')
+
+	role $1 types syd_domain;
+	syd_domtrans($2)
+	syd_oci_domtrans($2)
+')
+
+########################################
+## <summary>
+##	Execute syd_exec_t in the syd domain.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`syd_domtrans',`
+	gen_require(`
+		type syd_t;
+		type syd_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, syd_exec_t, syd_t)
+')
+
+########################################
+## <summary>
+##	Execute syd_oci_exec_t in the syd-oci domain.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`syd_oci_domtrans',`
+	gen_require(`
+		type syd_oci_t;
+		type syd_oci_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, syd_oci_exec_t, syd_oci_t)
+')
+
+######################################
+## <summary>
+##	Execute syd in the caller domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`syd_exec',`
+	gen_require(`
+		type syd_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	can_exec($1, syd_exec_t)
+')
+
+######################################
+## <summary>
+##	Execute syd-oci in the caller domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`syd_oci_exec',`
+	gen_require(`
+		type syd_oci_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	can_exec($1, syd_oci_exec_t)
+')
