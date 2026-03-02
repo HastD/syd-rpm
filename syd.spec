@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
-%bcond check 0
+%bcond check 1
 
 %global with_selinux 1
 %global modulename syd
