@@ -55,7 +55,7 @@ BuildRequires:  libseccomp-devel
 BuildRequires:  container-selinux
 BuildRequires:  make
 BuildRequires:  selinux-policy-devel
-Requires:       (%{name}-selinux if selinux-policy-%{selinuxtype})
+Recommends:     (%{name}-selinux if selinux-policy-%{selinuxtype})
 %endif
 
 %global _description Syd is a rock-solid application kernel to sandbox applications on Linux.
