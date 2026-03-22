@@ -11,7 +11,7 @@
 %global __brp_mangle_shebangs %{nil}
 
 Name:           syd
-Version:        3.50.0
+Version:        3.51.0
 Release:        %autorelease
 Summary:        Rock-solid application kernel
 
