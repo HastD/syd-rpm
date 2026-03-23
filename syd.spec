@@ -136,7 +136,6 @@ install -Dp -m 0644 -t %{buildroot}%{_datadir}/selinux/devel/include/distributed
 %{_bindir}/syd-run
 %{_bindir}/syd-sec
 %{_bindir}/syd-sh
-%{_bindir}/syd-sha
 %{_bindir}/syd-size
 %{_bindir}/syd-stat
 %{_bindir}/syd-sys
