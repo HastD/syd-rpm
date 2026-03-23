@@ -138,6 +138,7 @@ install -Dp -m 0644 -t %{buildroot}%{_datadir}/selinux/devel/include/distributed
 %{_bindir}/syd-sh
 %{_bindir}/syd-size
 %{_bindir}/syd-stat
+%{_bindir}/syd-sum
 %{_bindir}/syd-sys
 %{_bindir}/syd-tck
 %{_bindir}/syd-test
