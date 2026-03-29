@@ -50,6 +50,7 @@ Source:         syd-selinux-%{version}.tar.xz
 
 BuildRequires:  cargo-rpm-macros >= 26
 BuildRequires:  libseccomp-devel
+BuildRequires:  scdoc
 
 %if 0%{?with_selinux}
 BuildRequires:  container-selinux
@@ -74,14 +75,87 @@ Recommends:     (%{name}-selinux if selinux-policy-%{selinuxtype})
 %{cargo_license -f oci} > LICENSE.dependencies
 %{cargo_vendor_manifest}
 
+for file in man/*.scd; do
+    scdoc < "$file" > "${file%%.scd}"
+done
+
 %if 0%{?with_selinux}
 make -f %{_datadir}/selinux/devel/Makefile %{modulename}.pp
 bzip2 -9 %{modulename}.pp
 %endif
 
 %install
+%global syd_programs %{shrink:
+syd
+syd-aes
+syd-asm
+syd-aux
+syd-bit
+syd-cap
+syd-cat
+syd-cpu
+syd-dns
+syd-elf
+syd-emacs
+syd-env
+syd-exec
+syd-fd
+syd-fork
+syd-fs
+syd-hex
+syd-info
+syd-key
+syd-ldd
+syd-lock
+syd-ls
+syd-mdwe
+syd-mem
+syd-net
+syd-oci
+syd-ofd
+syd-path
+syd-pause
+syd-pds
+syd-poc
+syd-pty
+syd-read
+syd-rnd
+syd-run
+syd-sec
+syd-sh
+syd-size
+syd-stat
+syd-sum
+syd-sys
+syd-tck
+syd-test
+syd-test-do
+syd-tor
+syd-tsc
+syd-tty
+syd-utc
+syd-uts
+syd-x
+}
+
+for syd_program in %{syd_programs}; do
+    echo "%%{_bindir}/${syd_program}"
+done >> syd-rpm-files.txt
+
+for manpage in man/syd*.[1-8]; do
+    echo "%%{_mandir}/man${manpage##*.}/${manpage##*/}*"
+done >> syd-rpm-files.txt
+
 install -Dp -m 0755 -t %{buildroot}%{_bindir} target/rpm/syd* target/rpm/pandora
 rm -f %{buildroot}%{_bindir}/syd*.d
+
+install -Dp -m 0644 -t %{buildroot}%{_mandir}/man1 man/syd*.1
+install -Dp -m 0644 -t %{buildroot}%{_mandir}/man2 man/syd.2
+install -Dp -m 0644 -t %{buildroot}%{_mandir}/man5 man/syd.5
+install -Dp -m 0644 -t %{buildroot}%{_mandir}/man7 man/syd*.7
+
+install -Dp -m 0644 -t %{buildroot}%{_datadir}/vim/vimfiles/ftdetect vim/ftdetect/syd.vim
+install -Dp -m 0644 -t %{buildroot}%{_datadir}/vim/vimfiles/syntax vim/syntax/syd-3.vim
 
 install -Dp -t %{buildroot}%{_libdir} target/rpm/libsyd.so target/rpm/libsyd.a
 install -Dp -m 0644 -t %{buildroot}%{_includedir} lib/syd.h
@@ -98,62 +172,14 @@ install -Dp -m 0644 -t %{buildroot}%{_datadir}/selinux/devel/include/distributed
 %cargo_test -f oci -- --workspace
 %endif
 
-%files
+%files -f syd-rpm-files.txt
 %license COPYING
 %license LICENSE.dependencies
 %license cargo-vendor.txt
 %doc ChangeLog.md
 %doc README.md
-%{_bindir}/syd
-%{_bindir}/syd-aes
-%{_bindir}/syd-asm
-%{_bindir}/syd-aux
-%{_bindir}/syd-bit
-%{_bindir}/syd-cap
-%{_bindir}/syd-cat
-%{_bindir}/syd-cpu
-%{_bindir}/syd-dns
-%{_bindir}/syd-elf
-%{_bindir}/syd-emacs
-%{_bindir}/syd-env
-%{_bindir}/syd-exec
-%{_bindir}/syd-fd
-%{_bindir}/syd-fork
-%{_bindir}/syd-fs
-%{_bindir}/syd-hex
-%{_bindir}/syd-info
-%{_bindir}/syd-key
-%{_bindir}/syd-ldd
-%{_bindir}/syd-lock
-%{_bindir}/syd-ls
-%{_bindir}/syd-mdwe
-%{_bindir}/syd-mem
-%{_bindir}/syd-net
-%{_bindir}/syd-oci
-%{_bindir}/syd-ofd
-%{_bindir}/syd-path
-%{_bindir}/syd-pause
-%{_bindir}/syd-pds
-%{_bindir}/syd-poc
-%{_bindir}/syd-pty
-%{_bindir}/syd-read
-%{_bindir}/syd-rnd
-%{_bindir}/syd-run
-%{_bindir}/syd-sec
-%{_bindir}/syd-sh
-%{_bindir}/syd-size
-%{_bindir}/syd-stat
-%{_bindir}/syd-sum
-%{_bindir}/syd-sys
-%{_bindir}/syd-tck
-%{_bindir}/syd-test
-%{_bindir}/syd-test-do
-%{_bindir}/syd-tor
-%{_bindir}/syd-tsc
-%{_bindir}/syd-tty
-%{_bindir}/syd-utc
-%{_bindir}/syd-uts
-%{_bindir}/syd-x
+%{_datadir}/vim/vimfiles/ftdetect/syd.vim
+%{_datadir}/vim/vimfiles/syntax/syd-3.vim
 
 %package -n libsyd
 Summary: Rust-based C library for syd interaction via /dev/syd
