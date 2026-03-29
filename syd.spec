@@ -11,7 +11,7 @@
 %global __brp_mangle_shebangs %{nil}
 
 Name:           syd
-Version:        3.51.0
+Version:        3.51.2
 Release:        %autorelease
 Summary:        Rock-solid application kernel
 
@@ -83,6 +83,11 @@ bzip2 -9 %{modulename}.pp
 install -Dp -m 0755 -t %{buildroot}%{_bindir} target/rpm/syd* target/rpm/pandora
 rm -f %{buildroot}%{_bindir}/syd*.d
 
+install -Dp -t %{buildroot}%{_libdir} target/rpm/libsyd.so target/rpm/libsyd.a
+install -Dp -m 0644 -t %{buildroot}%{_includedir} lib/syd.h
+install -Dp -m 0755 -t %{buildroot}%{perl_vendorlib} lib/src/syd.pm
+install -Dp -m 0755 -t %{buildroot}%{python3_sitelib} lib/src/syd.py
+
 %if 0%{?with_selinux}
 install -Dp -m 0644 -t %{buildroot}%{_datadir}/selinux/packages/%{selinuxtype} %{modulename}.pp.bz2
 install -Dp -m 0644 -t %{buildroot}%{_datadir}/selinux/devel/include/distributed selinux/%{modulename}.if
@@ -149,6 +154,33 @@ install -Dp -m 0644 -t %{buildroot}%{_datadir}/selinux/devel/include/distributed
 %{_bindir}/syd-utc
 %{_bindir}/syd-uts
 %{_bindir}/syd-x
+
+%package -n libsyd
+Summary: Rust-based C library for syd interaction via /dev/syd
+License: LGPL-3.0-only
+Requires: %{name} = %{version}-%{release}
+
+%description -n libsyd
+Rust-based C library for syd interaction via /dev/syd. Includes Python and Perl bindings. %{_description}
+
+%files -n libsyd
+%attr(0755, -, -) %{_libdir}/libsyd.so
+%attr(0755, -, -) %{perl_vendorlib}/syd.pm
+%pycached %{python3_sitelib}/syd.py
+
+%package -n libsyd-devel
+Summary: Development files for libsyd
+License: LGPL-3.0-only
+BuildRequires: perl-generators
+BuildRequires: python3-devel
+Requires: libsyd = %{version}-%{release}
+
+%description -n libsyd-devel
+This package contains the C header files for libsyd. %{_description}
+
+%files -n libsyd-devel
+%attr(0644, -, -) %{_includedir}/syd.h
+%attr(0644, -, -) %{_libdir}/libsyd.a
 
 %package tui
 Summary: Syd's Terminal User Interface
