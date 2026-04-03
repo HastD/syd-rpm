@@ -49,3 +49,11 @@ optional_policy(`
 	')
 	syd_run(unconfined_r, unconfined_t)
 ')
+
+optional_policy(`
+	gen_require(`
+		type init_t;
+	')
+	syd_domtrans(init_t)
+	syd_oci_domtrans(init_t)
+')
