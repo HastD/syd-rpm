@@ -62,6 +62,8 @@ optional_policy(`
 	gen_require(`
 		role unconfined_r;
 		type init_t;
+		type initrc_t;
 	')
 	syd_run(unconfined_r, init_t)
+	syd_run(unconfined_r, initrc_t)
 ')
