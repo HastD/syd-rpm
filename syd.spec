@@ -12,7 +12,7 @@
 
 Name:           syd
 Version:        3.51.2
-Release:        2
+Release:        3
 Summary:        Rock-solid application kernel
 
 License:        %{shrink:

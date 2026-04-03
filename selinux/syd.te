@@ -52,8 +52,16 @@ optional_policy(`
 
 optional_policy(`
 	gen_require(`
+		role unconfined_r;
+		type unconfined_service_t;
+	')
+	syd_run(unconfined_r, unconfined_service_t)
+')
+
+optional_policy(`
+	gen_require(`
+		role unconfined_r;
 		type init_t;
 	')
-	syd_domtrans(init_t)
-	syd_oci_domtrans(init_t)
+	syd_run(unconfined_r, init_t)
 ')
